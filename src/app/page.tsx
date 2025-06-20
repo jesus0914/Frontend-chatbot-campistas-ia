@@ -15,6 +15,8 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
@@ -27,7 +29,7 @@ export default function Page() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/api/chatbot', {
+      const response = await fetch(`${API_URL}/api/chatbot`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pregunta: input }),
@@ -37,7 +39,6 @@ export default function Page() {
       const botMessage: Message = { sender: 'bot', text: data.respuesta };
       setMessages((prev) => [...prev, botMessage]);
     } catch {
-      // Aquí no usamos "error" para evitar el warning de ESLint
       setMessages((prev) => [
         ...prev,
         { sender: 'bot', text: 'Ocurrió un error al contactar al servidor.' },
@@ -55,7 +56,6 @@ export default function Page() {
   return (
     <main className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6 flex flex-col md:flex-row gap-6">
-        
         {/* Chat */}
         <div className="flex-1 flex flex-col">
           <h1 className="text-3xl font-bold text-blue-600 mb-4">Chatbot Campistas IA</h1>
@@ -67,9 +67,7 @@ export default function Page() {
               >
                 <span
                   className={`inline-block px-4 py-2 rounded-lg ${
-                    msg.sender === 'user'
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-200 text-black'
+                    msg.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
                   }`}
                 >
                   {msg.text}
@@ -114,13 +112,26 @@ export default function Page() {
         <div className="md:w-80 bg-gray-50 border border-gray-200 rounded p-4 text-sm">
           <h2 className="font-semibold text-blue-600 mb-2">📝 Instrucciones de uso</h2>
           <ol className="list-decimal list-inside space-y-1">
-            <li>Pregunta: <strong>&quot;Tengo dudas sobre la inscripción&quot;</strong></li>
-            <li>Responde: <strong>&quot;Sí&quot;</strong> o <strong>&quot;No&quot;</strong></li>
-            <li>Pregunta: <strong>&quot;¿Cuáles son los horarios si estoy en la modalidad virtual?&quot;</strong></li>
-            <li>Pregunta: <strong>&quot;¿Puedo recibir certificado si no he terminado todos los módulos?&quot;</strong></li>
+            <li>
+              Pregunta: <strong>&quot;Tengo dudas sobre la inscripción&quot;</strong>
+            </li>
+            <li>
+              Responde: <strong>&quot;Sí&quot;</strong> o <strong>&quot;No&quot;</strong>
+            </li>
+            <li>
+              Pregunta:{' '}
+              <strong>&quot;¿Cuáles son los horarios si estoy en la modalidad virtual?&quot;</strong>
+            </li>
+            <li>
+              Pregunta:{' '}
+              <strong>&quot;¿Puedo recibir certificado si no he terminado todos los módulos?&quot;</strong>
+            </li>
             <li>Responde: <strong>&quot;No&quot;</strong></li>
           </ol>
-          <p className="mt-3 text-gray-600">💡 Puedes hacer otras preguntas como <em>&quot;¿Qué se ve en HTML?&quot;</em> o <em>&quot;¿Qué es IA?&quot;</em></p>
+          <p className="mt-3 text-gray-600">
+            💡 Puedes hacer otras preguntas como <em>&quot;¿Qué se ve en HTML?&quot;</em> o{' '}
+            <em>&quot;¿Qué es IA?&quot;</em>
+          </p>
         </div>
       </div>
     </main>
