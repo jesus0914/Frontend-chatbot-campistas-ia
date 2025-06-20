@@ -36,7 +36,8 @@ export default function Page() {
       const data = await response.json();
       const botMessage: Message = { sender: 'bot', text: data.respuesta };
       setMessages((prev) => [...prev, botMessage]);
-    } catch (error) {
+    } catch {
+      // Aquí no usamos "error" para evitar el warning de ESLint
       setMessages((prev) => [
         ...prev,
         { sender: 'bot', text: 'Ocurrió un error al contactar al servidor.' },
@@ -110,18 +111,17 @@ export default function Page() {
         </div>
 
         {/* Instrucciones */}
-          <div className="md:w-80 bg-gray-50 border border-gray-200 rounded p-4 text-sm">
-            <h2 className="font-semibold text-blue-600 mb-2">📝 Instrucciones de uso</h2>
-            <ol className="list-decimal list-inside space-y-1">
-              <li>Pregunta: <strong>&quot;Tengo dudas sobre la inscripción&quot;</strong></li>
-              <li>Responde: <strong>&quot;Sí&quot;</strong> o <strong>&quot;No&quot;</strong></li>
-              <li>Pregunta: <strong>&quot;¿Cuáles son los horarios si estoy en la modalidad virtual?&quot;</strong></li>
-              <li>Pregunta: <strong>&quot;¿Puedo recibir certificado si no he terminado todos los módulos?&quot;</strong></li>
-              <li>Responde: <strong>&quot;No&quot;</strong></li>
-            </ol>
-            <p className="mt-3 text-gray-600">💡 Puedes hacer otras preguntas como <em>&quot;¿Qué se ve en HTML?&quot;</em> o <em>&quot;¿Qué es IA?&quot;</em></p>
-          </div>
-
+        <div className="md:w-80 bg-gray-50 border border-gray-200 rounded p-4 text-sm">
+          <h2 className="font-semibold text-blue-600 mb-2">📝 Instrucciones de uso</h2>
+          <ol className="list-decimal list-inside space-y-1">
+            <li>Pregunta: <strong>&quot;Tengo dudas sobre la inscripción&quot;</strong></li>
+            <li>Responde: <strong>&quot;Sí&quot;</strong> o <strong>&quot;No&quot;</strong></li>
+            <li>Pregunta: <strong>&quot;¿Cuáles son los horarios si estoy en la modalidad virtual?&quot;</strong></li>
+            <li>Pregunta: <strong>&quot;¿Puedo recibir certificado si no he terminado todos los módulos?&quot;</strong></li>
+            <li>Responde: <strong>&quot;No&quot;</strong></li>
+          </ol>
+          <p className="mt-3 text-gray-600">💡 Puedes hacer otras preguntas como <em>&quot;¿Qué se ve en HTML?&quot;</em> o <em>&quot;¿Qué es IA?&quot;</em></p>
+        </div>
       </div>
     </main>
   );
