@@ -13,9 +13,9 @@ export default function Page() {
     { sender: 'bot', text: '¡Hola! Soy tu asistente del bootcamp. ¿En qué puedo ayudarte?' },
   ]);
   const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState(false); // 👈 nuevo estado para mostrar errores
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // ✅ Asegúrate de que esta URL NO incluye /api/chatbot
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
   useEffect(() => {
@@ -25,27 +25,28 @@ export default function Page() {
   const sendMessage = async () => {
     if (!input.trim()) return;
 
+    setServerError(false); // resetear error si existe
     const userMessage: Message = { sender: 'user', text: input };
     setMessages((prev) => [...prev, userMessage]);
     setLoading(true);
 
     try {
-      // ✅ Esta es la URL correcta
       const response = await fetch(`${API_URL}/api/chatbot`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pregunta: input }),
       });
 
-      if (!response.ok) throw new Error('Error en el servidor');
+      if (!response.ok) throw new Error('Respuesta no válida del servidor');
 
       const data = await response.json();
       const botMessage: Message = { sender: 'bot', text: data.respuesta };
       setMessages((prev) => [...prev, botMessage]);
-    } catch (error) {
+    } catch {
+      setServerError(true);
       setMessages((prev) => [
         ...prev,
-        { sender: 'bot', text: 'Ocurrió un error al contactar al servidor.' },
+        { sender: 'bot', text: '❌ Error: no se pudo contactar al servidor. Intenta más tarde.' },
       ]);
     }
 
@@ -87,6 +88,12 @@ export default function Page() {
             )}
             <div ref={messagesEndRef} />
           </div>
+
+          {serverError && (
+            <div className="mb-4 text-sm text-red-600">
+              ⚠️ No se pudo conectar con el servidor. Verifica tu conexión o intenta más tarde.
+            </div>
+          )}
 
           <div className="flex items-center gap-2">
             <input
