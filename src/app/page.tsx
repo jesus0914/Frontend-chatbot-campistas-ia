@@ -15,6 +15,7 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // ✅ Asegúrate de que esta URL NO incluye /api/chatbot
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function Page() {
     setLoading(true);
 
     try {
+      // ✅ Esta es la URL correcta
       const response = await fetch(`${API_URL}/api/chatbot`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
