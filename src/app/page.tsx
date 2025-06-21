@@ -35,10 +35,12 @@ export default function Page() {
         body: JSON.stringify({ pregunta: input }),
       });
 
+      if (!response.ok) throw new Error('Error en el servidor');
+
       const data = await response.json();
       const botMessage: Message = { sender: 'bot', text: data.respuesta };
       setMessages((prev) => [...prev, botMessage]);
-    } catch {
+    } catch (error) {
       setMessages((prev) => [
         ...prev,
         { sender: 'bot', text: 'Ocurrió un error al contactar al servidor.' },
@@ -129,7 +131,7 @@ export default function Page() {
             <li>Responde: <strong>&quot;No&quot;</strong></li>
           </ol>
           <p className="mt-3 text-gray-600">
-            💡 Puedes hacer otras preguntas como <em>&quot;¿Qué se ve en HTML?&quot;</em> o{' '}
+            💡 También puedes preguntar cosas como <em>&quot;¿Qué se ve en HTML?&quot;</em> o{' '}
             <em>&quot;¿Qué es IA?&quot;</em>
           </p>
         </div>
